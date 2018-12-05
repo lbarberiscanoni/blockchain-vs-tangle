@@ -118,9 +118,9 @@ def mining():
     return "Success", 201
 
 @app.route('/tangle', methods=['GET'])
-def validate_and_add_tx():
+def eval_the_tangle():
 
-    return str(tangle.graph.edges)
+    return str(len(tangle.graph.nodes) - 5)
 
 app.run(debug=True, port=8000)
 
