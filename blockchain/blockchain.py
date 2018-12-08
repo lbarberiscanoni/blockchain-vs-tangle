@@ -4,6 +4,20 @@ import time
 
 from flask import Flask, request
 import requests
+import pickle
+from tqdm import tqdm
+
+import sys
+
+#has to be 5, 50, 500, 50000, 500000
+sample_size = int(sys.argv[1])
+
+#size of the batch for mining, 500 for non-trivial amounts, 5 if we are testing super low tx #s to avoid errors
+batch_size = 0
+if sample_size > 50:
+    batch_size = 500
+else:
+    batch_size = 5
 
 class Block:
     def __init__(self, index, transactions, timestamp, oldHash):
@@ -133,8 +147,6 @@ class Blockchain:
 
 
 
-
-
 #the network to manage the ledgering and mining process
 
 app = Flask(__name__)
@@ -142,6 +154,9 @@ app = Flask(__name__)
 blockchain = Blockchain()
 
 peers = set()
+
+
+
 
 def consensus():
 
@@ -219,7 +234,23 @@ def validate_and_add_block():
 def get_pending_tx():
     return json.dumps(blockchain.unconfirmed_transactions)
 
+@app.route("/main")
+def main():
+    with open('transactions.pkl','rb') as f:
+        transactions = pickle.load(f)
+        print("transactions loaded")
 
+        i = 0
+        for tx in tqdm(transactions[0: sample_size]):
+            tx["timestamp"] = time.time()
+
+            blockchain.add_new_transaction(tx)
+
+            if ((i % batch_size) == 0):
+                requests.get("http://localhost:8000/mine")
+            i += 1
+
+    return "all transactions loaded"
 
 
 

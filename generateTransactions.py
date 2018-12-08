@@ -23,5 +23,8 @@ for i in range(500000):
 
 	transactions.append(transaction)
 
-with open('data/transactions.pkl','w') as f:
+with open('blockchain/transactions.pkl','w') as f:
+    pickle.dump(transactions, f)
+
+with open('tangle/transactions.pkl','w') as f:
     pickle.dump(transactions, f)

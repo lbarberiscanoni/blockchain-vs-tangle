@@ -6,6 +6,12 @@ import random
 from flask import Flask, request
 import requests
 import networkx as nx
+import pickle
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+
+#has to be 5, 50, 500, 50000, 500000
+sample_size = int(sys.argv[1])
 
 class Node:
 
@@ -28,7 +34,7 @@ class Node:
 class Network:
 
     # proof_of_work_difficulty of our PoW algorithm
-    proof_of_work_difficulty = 2
+    proof_of_work_difficulty = 1
 
     def __init__(self):
 
@@ -122,5 +128,32 @@ def eval_the_tangle():
 
     return str(len(tangle.graph.nodes) - 5)
 
+@app.route('/main', methods=['GET'])
+def main():
+    with open('transactions.pkl','rb') as f:
+        transactions = pickle.load(f)
+        print("transactions loaded")
+        i = 0
+        for tx in tqdm(transactions[0:sample_size]):
+
+            tx["timestamp"] = time.time()
+            tx["index"] = len(tangle.graph.nodes) + 1
+
+            tangle.tips.append(tx)
+            tangle.graph.add_node(tx["index"])
+
+            if ((i % 5) == 0):
+                requests.get("http://localhost:8000/mining")
+            i += 1
+
+    #drawing it for fun
+    nx.draw(tangle.graph, pos=nx.spring_layout(tangle.graph), node_color='blue', node_size=5)
+    plt.savefig("test@" + str(sample_size) + ".png")
+
+    return("hello")
+
 app.run(debug=True, port=8000)
+
+
+
 
