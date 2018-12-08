@@ -14,9 +14,9 @@ Once you get into either directory, set up 2 screen:
  - on screen #2, "python run.py" is all you need. This triggers a request to the server to load the transactions and open up mining through the loop. 
 
  I takes a while to run, so if you don't want to wait around, check out the output of tqdm. It will give you 3 pieces of information:
- a) the iterations per second rate (which we used for our sub 0s estimates)
- b) a progress bar showing how far into the process the program is
- c) a remarkably accurate estimate of how long the process will take. 
+ - a) the iterations per second rate (which we used for our sub 0s estimates)
+ - b) a progress bar showing how far into the process the program is
+ - c) a remarkably accurate estimate of how long the process will take. 
 
 I also included the script we used to generate our testing set with transactions. "python generateTransactions.py" is all you need for that. Feel free to play with it if you'd like XD
 
