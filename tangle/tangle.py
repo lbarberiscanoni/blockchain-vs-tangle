@@ -9,9 +9,13 @@ import networkx as nx
 import pickle
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import sys
 
 #has to be 5, 50, 500, 50000, 500000
 sample_size = int(sys.argv[1])
+
+#size of the batch for mining, 500 for non-trivial amounts, 5 if we are testing super low tx #s to avoid errors
+batch_size = int(sys.argv[2])
 
 class Node:
 
@@ -142,7 +146,7 @@ def main():
             tangle.tips.append(tx)
             tangle.graph.add_node(tx["index"])
 
-            if ((i % 5) == 0):
+            if ((i % batch_size) == 0):
                 requests.get("http://localhost:8000/mining")
             i += 1
 

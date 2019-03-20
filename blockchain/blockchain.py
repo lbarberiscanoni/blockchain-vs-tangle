@@ -13,11 +13,7 @@ import sys
 sample_size = int(sys.argv[1])
 
 #size of the batch for mining, 500 for non-trivial amounts, 5 if we are testing super low tx #s to avoid errors
-batch_size = 0
-if sample_size > 50:
-    batch_size = 500
-else:
-    batch_size = 5
+batch_size = int(sys.argv[2])
 
 class Block:
     def __init__(self, index, transactions, timestamp, oldHash):
